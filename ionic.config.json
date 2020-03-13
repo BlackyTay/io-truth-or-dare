@@ -1,0 +1,7 @@
+{
+  "name": "io-truth-or-dare",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
