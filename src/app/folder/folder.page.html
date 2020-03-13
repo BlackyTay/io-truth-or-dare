@@ -3,19 +3,53 @@
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-title>{{ folder }}</ion-title>
+    <!-- <ion-title>{{ folder }}</ion-title> -->
+    <ion-buttons slot="end">
+      <ion-label>MODE</ion-label>
+      <ion-toggle slot="end" id="mode">MODE</ion-toggle>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
+  <!-- <ion-header collapse="condense">
     <ion-toolbar>
       <ion-title size="large">{{ folder }}</ion-title>
     </ion-toolbar>
-  </ion-header>
+  </ion-header> -->
 
   <div id="container">
-    <strong class="capitalize">{{ folder }}</strong>
-    <p>Explore <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+    <svg id="dice" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 508 508">
+      <defs>
+        <style>
+          .cls-1 {
+            fill: #fff;
+            stroke-width: 10px;
+          }
+
+          .cls-1,
+          .cls-2 {
+            stroke: #000;
+            stroke-miterlimit: 10;
+          }
+
+          .cls-2 {
+            fill: #ff0007;
+          }
+        </style>
+      </defs>
+      <title>Dice</title>
+      <g id="Layer_2" data-name="Layer 2">
+        <g id="Layer_1-2" data-name="Layer 1">
+          <rect class="cls-1" x="5" y="5" width="498" height="498" rx="101.21" />
+          <circle class="cls-2" cx="350.53" cy="110.12" r="60.26" />
+          <circle class="cls-2" cx="157.47" cy="110.12" r="60.26" />
+          <circle class="cls-2" cx="350.53" cy="254" r="60.26" />
+          <circle class="cls-2" cx="157.47" cy="254" r="60.26" />
+          <circle class="cls-2" cx="350.53" cy="397.88" r="60.26" />
+          <circle class="cls-2" cx="157.47" cy="397.88" r="60.26" />
+        </g>
+      </g>
+    </svg>
   </div>
 </ion-content>
