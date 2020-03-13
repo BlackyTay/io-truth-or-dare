@@ -6,12 +6,12 @@
     <!-- <ion-title>{{ folder }}</ion-title> -->
     <ion-buttons slot="end">
       <ion-label>MODE</ion-label>
-      <ion-toggle slot="end" id="mode">MODE</ion-toggle>
+      <ion-toggle slot="end" id="mode" (ionChange)="changeMode()">MODE</ion-toggle>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" id="diceMode" >
   <!-- <ion-header collapse="condense">
     <ion-toolbar>
       <ion-title size="large">{{ folder }}</ion-title>
@@ -19,7 +19,7 @@
   </ion-header> -->
 
   <div id="container">
-    <svg id="dice" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 508 508">
+    <svg id="dice" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 508 508" (click)="setOne()">
       <defs>
         <style>
           .cls-1 {
@@ -42,14 +42,45 @@
       <g id="Layer_2" data-name="Layer 2">
         <g id="Layer_1-2" data-name="Layer 1">
           <rect class="cls-1" x="5" y="5" width="498" height="498" rx="101.21" />
-          <circle class="cls-2" cx="350.53" cy="110.12" r="60.26" />
-          <circle class="cls-2" cx="157.47" cy="110.12" r="60.26" />
-          <circle class="cls-2" cx="350.53" cy="254" r="60.26" />
-          <circle class="cls-2" cx="157.47" cy="254" r="60.26" />
-          <circle class="cls-2" cx="350.53" cy="397.88" r="60.26" />
-          <circle class="cls-2" cx="157.47" cy="397.88" r="60.26" />
+          <circle id="dot1" class="cls-2" cx="350.53" cy="110.12" r="60.26" />
+          <circle id="dot2" class="cls-2" cx="157.47" cy="110.12" r="60.26" />
+          <circle id="dot3" class="cls-2" cx="350.53" cy="254" r="60.26" />
+          <circle id="dot4" class="cls-2" cx="157.47" cy="254" r="60.26" />
+          <circle id="dot5" class="cls-2" cx="350.53" cy="397.88" r="60.26" />
+          <circle id="dot6" class="cls-2" cx="157.47" cy="397.88" r="60.26" />
         </g>
       </g>
     </svg>
   </div>
+
+  <div class="controls">
+    <ion-button color="light" (click)="setOne()">
+      <!-- <ion-icon slot="start" name="add"></ion-icon> -->
+      1
+    </ion-button>
+    <ion-button color="light" (click)="setTwo()">
+      <!-- <ion-icon slot="start" name="add"></ion-icon> -->
+      2
+    </ion-button>
+    <ion-button color="light" (click)="setThree()">
+      <!-- <ion-icon slot="start" name="add"></ion-icon> -->
+      3
+    </ion-button>
+    <ion-button color="light" (click)="setFour()">
+      <!-- <ion-icon slot="start" name="add"></ion-icon> -->
+      4
+    </ion-button>
+    <ion-button color="light" (click)="setFive()">
+      <!-- <ion-icon slot="start" name="add"></ion-icon> -->
+      5
+    </ion-button>
+    <ion-button color="light" (click)="setSix()">
+      <!-- <ion-icon slot="start" name="add"></ion-icon> -->
+      6
+    </ion-button>
+  </div>
+</ion-content>
+
+<ion-content [fullscreen]="true" id="bottleMode">
+  Bottle Mode
 </ion-content>
