@@ -108,7 +108,7 @@ export class SqlService {
   }
 
   deleteTruth(id) {
-    return  this.database.executeSql('DELETE FROM truth WHERE id = ?', [id])
+    return  this.database.executeSql('DELETE FROM truths WHERE id = ?', [id])
     .then(_ => {
       this.loadTruths();
     });
@@ -157,7 +157,7 @@ export class SqlService {
   }
 
   deleteDare(id) {
-    return  this.database.executeSql('DELETE FROM dare WHERE id = ?', [id])
+    return  this.database.executeSql('DELETE FROM dares WHERE id = ?', [id])
     .then(_ => {
       this.loadDares();
     });
