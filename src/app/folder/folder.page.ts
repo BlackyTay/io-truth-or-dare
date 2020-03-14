@@ -1,6 +1,7 @@
 import { Component, OnInit, Renderer } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
+import { resolve } from 'url';
 
 @Component({
   selector: 'app-folder',
@@ -21,6 +22,7 @@ export class FolderPage implements OnInit {
   mode: any;
   bottle: any;
   deg: number = 0;
+  rand: number;
   public show: boolean = true;
 
   constructor(
@@ -56,7 +58,9 @@ export class FolderPage implements OnInit {
     this.renderer.setElementStyle(this.bottle, 'transition', '5s cubic-bezier(0.05, 0.95, 0.31, 0.95)');
   }
 
-  setOne(){
+  async setOne(){
+    console.log("SetOne start");
+    return new Promise((resolve) => {
     this.renderer.setElementAttribute(this.dot1, 'transform','scale(1) translate(1, 1)');
     this.renderer.setElementAttribute(this.dot2, 'transform','scale(1) translate(1, 1)');
     this.renderer.setElementAttribute(this.dot3, 'transform','scale(1) translate(1, 1)');
@@ -71,9 +75,14 @@ export class FolderPage implements OnInit {
     this.renderer.setElementStyle(this.dot4, 'opacity', '0');
     this.renderer.setElementStyle(this.dot5, 'opacity', '0');
     this.renderer.setElementStyle(this.dot6, 'opacity', '0');
+    console.log('SetOne end');
+    setTimeout(()=>resolve('setOne'),300);
+      
+    });
   }
 
-  setTwo(){
+  async setTwo(){
+    return new Promise((resolve) => {
     this.renderer.setElementAttribute(this.dot1, 'transform','scale(1.2) translate(-55, 25)');
     this.renderer.setElementAttribute(this.dot2, 'transform','scale(1.2) translate(-25, 186)');
     this.renderer.setElementAttribute(this.dot3, 'transform','scale(1) translate(1, 1)');
@@ -86,9 +95,12 @@ export class FolderPage implements OnInit {
     this.renderer.setElementStyle(this.dot4, 'opacity', '0');
     this.renderer.setElementStyle(this.dot5, 'opacity', '0');
     this.renderer.setElementStyle(this.dot6, 'opacity', '0');
+    setTimeout(()=>resolve('setTwo'),350);
+    });
   }
   
-  setThree(){
+  async setThree(){
+    return new Promise((resolve) => {
     this.renderer.setElementAttribute(this.dot1, 'transform','scale(1.1) translate(-20, 10)');
     this.renderer.setElementAttribute(this.dot2, 'transform','scale(1.1) translate(-30, 226)');
     this.renderer.setElementAttribute(this.dot3, 'transform','scale(1.1) translate(-120, -24)');
@@ -102,9 +114,12 @@ export class FolderPage implements OnInit {
     this.renderer.setElementStyle(this.dot4, 'opacity', '0');
     this.renderer.setElementStyle(this.dot5, 'opacity', '0');
     this.renderer.setElementStyle(this.dot6, 'opacity', '0');
+    setTimeout(()=>resolve('setThree'),380);
+    });
   }
   
-  setFour(){
+  async setFour(){
+    return new Promise((resolve) => {
     this.renderer.setElementAttribute(this.dot1, 'transform','scale(1) translate(1, 50)');
     this.renderer.setElementAttribute(this.dot2, 'transform','scale(1) translate(1, 50)');
     this.renderer.setElementAttribute(this.dot3, 'transform','scale(1) translate(1, 90)');
@@ -118,9 +133,12 @@ export class FolderPage implements OnInit {
     this.renderer.setElementStyle(this.dot4, 'opacity', '1');
     this.renderer.setElementStyle(this.dot5, 'opacity', '0');
     this.renderer.setElementStyle(this.dot6, 'opacity', '0');
+    setTimeout(()=>resolve('setFour'),350);
+    });
   }
   
-  setFive(){
+  async setFive(){
+    return new Promise((resolve) => {
     this.renderer.setElementAttribute(this.dot1, 'transform','scale(1) translate(16, 35)');
     this.renderer.setElementAttribute(this.dot2, 'transform','scale(1) translate(-14, 35)');
     this.renderer.setElementAttribute(this.dot3, 'transform','scale(1) translate(16, 105)');
@@ -134,9 +152,12 @@ export class FolderPage implements OnInit {
     this.renderer.setElementStyle(this.dot4, 'opacity', '1');
     this.renderer.setElementStyle(this.dot5, 'opacity', '1');
     this.renderer.setElementStyle(this.dot6, 'opacity', '0');
+    setTimeout(()=>resolve('setFive'),380);
+    });
   }
   
-  setSix(){
+  async setSix(){
+    return new Promise((resolve) => {
     this.renderer.setElementAttribute(this.dot1, 'transform','scale(1) translate(1, 1)');
     this.renderer.setElementAttribute(this.dot2, 'transform','scale(1) translate(1, 1)');
     this.renderer.setElementAttribute(this.dot3, 'transform','scale(1) translate(1, 1)');
@@ -150,6 +171,52 @@ export class FolderPage implements OnInit {
     this.renderer.setElementStyle(this.dot4, 'opacity', '1');
     this.renderer.setElementStyle(this.dot5, 'opacity', '1');
     this.renderer.setElementStyle(this.dot6, 'opacity', '1');
+    setTimeout(()=>resolve('setSix'),300);
+    });
+  }
+
+  async rollDice() {
+    console.log('roll');
+    this.rand = Math.ceil(Math.random()*6);
+    console.log('Rand : ', this.rand.toString());
+    this.setTwo()
+    .then(()=> this.setSix())
+    .then(()=> this.setSix())
+    .then(()=> this.setThree())
+    .then(()=> this.setOne())
+    .then(()=> this.setTwo())
+    .then(()=> this.setThree())
+    .then(()=> this.setSix())
+    .then(()=> this.setFive())
+    .then(()=> this.setFour())
+    .then(()=> {
+      switch(this.rand){
+        case 1:
+          this.setOne();
+          break;
+        case 2:
+          this.setTwo();
+          break;
+        case 3:
+          this.setThree();
+          break;
+        case 4:
+          this.setFour();
+          break;
+        case 5:
+          this.setFive();
+          break;
+        case 6:
+          this.setSix();
+          break;
+      }
+    });
+    // console.log('roll 1');
+    // await this.setTwo();
+    // await this.setThree();
+    // await this.setFour();
+    // await this.setFive();
+    // await this.setSix();
   }
 
   changeMode() {
