@@ -1,3 +1,6 @@
+// Source ************************************ */
+// https://devdactic.com/ionic-4-sqlite-queries/
+// ********************************** Source */
 import { Injectable } from '@angular/core';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite/ngx';
 import { Platform } from '@ionic/angular';
@@ -5,6 +8,7 @@ import { SQLitePorter } from '@ionic-native/sqlite-porter/ngx';
 import { BehaviorSubject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Truth } from '../interfaces/truth';
+import { Dare } from '../interfaces/dare';
 
 @Injectable({
   providedIn: 'root'
@@ -85,7 +89,7 @@ export class SqlService {
     });
   }
 
-  addTruths(title) {
+  addTruth(title) {
     let data  = [title];
     return this.database.executeSql('INSERT INTO truths (title) VALUES (?)', data)
     .then(data => {
@@ -112,8 +116,57 @@ export class SqlService {
 
   updateTruth(truth:Truth) {
     return this.database.executeSql('UPDATE truths SET title = ? WHERE id=?',[truth.title, truth.id])
-    .then(dtaa => {
+    .then(data => {
       this.loadTruths();
+    });
+  }
+
+  loadDares(){
+    return this.database.executeSql('SELECT * FROM dares', [])
+    .then(data => {
+      let dare: Dare[] = [];
+
+      if(data.rows.length > 0){
+        for(let i=0; i<data.rows.length; i++ ) {
+          dare.push({
+            id: parseInt(data.rows.item(i).id),
+            title: data.rows.item(i).title
+          });
+        }
+      }
+      this.dares.next(dare);
+    });
+  }
+
+  addDare(title) {
+    let data  = [title];
+    return this.database.executeSql('INSERT INTO dares (title) VALUES (?)', data)
+    .then(data => {
+      this.loadDares();
+    });
+  }
+
+  getDare(id) {
+    return this.database.executeSql('SELECT * FROM dares WHERE id = ?', [id])
+    .then(data => {
+      return {
+        id: data.rows.item[0].id,
+        title: data.rows.item[0].title
+      }
+    });
+  }
+
+  deleteDare(id) {
+    return  this.database.executeSql('DELETE FROM dare WHERE id = ?', [id])
+    .then(_ => {
+      this.loadDares();
+    });
+  }
+
+  updateDare(dare:Dare) {
+    return this.database.executeSql('UPDATE dares SET title = ? WHERE id=?',[dare.title, dare.id])
+    .then(data => {
+      this.loadDares();
     });
   }
 }
