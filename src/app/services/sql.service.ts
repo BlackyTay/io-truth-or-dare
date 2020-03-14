@@ -9,6 +9,7 @@ import { BehaviorSubject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Truth } from '../interfaces/truth';
 import { Dare } from '../interfaces/dare';
+import { Question } from '../interfaces/question';
 
 @Injectable({
   providedIn: 'root'
@@ -167,6 +168,57 @@ export class SqlService {
     return this.database.executeSql('UPDATE dares SET title = ? WHERE id=?',[dare.title, dare.id])
     .then(data => {
       this.loadDares();
+    });
+  }
+
+  loadQuestions(){
+    return this.database.executeSql('SELECT * FROM questions', [])
+    .then(data => {
+      let question: Question[] = [];
+
+      if(data.rows.length > 0){
+        for(let i=0; i<data.rows.length; i++ ) {
+          question.push({
+            id: parseInt(data.rows.item(i).id),
+            question: data.rows.item(i).question,
+            truth_id: data.rows.item(i).truth_id
+          });
+        }
+      }
+      this.questions.next(question);
+    });
+  }
+
+  addQuestion(questions, truth_id) {
+    let data  = [questions, truth_id];
+    return this.database.executeSql('INSERT INTO questions (questions, truth_id) VALUES (?, ?)', data)
+    .then(data => {
+      this.loadQuestions();
+    });
+  }
+
+  getQuestion(id) {
+    return this.database.executeSql('SELECT * FROM questions WHERE id = ?', [id])
+    .then(data => {
+      return {
+        id: data.rows.item[0].id,
+        question: data.rows.item(0).question,
+        truth_id: data.rows.item(0).truth_id
+      }
+    });
+  }
+
+  deleteQuestion(id) {
+    return  this.database.executeSql('DELETE FROM questions WHERE id = ?', [id])
+    .then(_ => {
+      this.loadQuestions();
+    });
+  }
+
+  updateQuestion(question:Question) {
+    return this.database.executeSql('UPDATE questions SET question = ?, truth_id = ? WHERE id=?',[question.question, question.truth_id, question.id])
+    .then(data => {
+      this.loadQuestions();
     });
   }
 }
