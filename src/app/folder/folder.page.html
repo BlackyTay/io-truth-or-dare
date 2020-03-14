@@ -81,6 +81,10 @@
   </div>
 </ion-content>
 
-<ion-content [fullscreen]="true" id="bottleMode">
-  Bottle Mode
+<ion-content [fullscreen]="true" id="bottleMode" class="textAlignMiddle">
+  <!-- <ion-label position="inline">Bottle Mode</ion-label> -->
+  <img src="assets/bottle.png" id="bottle" class="middle" alt="bottle">
+  <ion-button (click)="rotate()" fill="solid" shape="round" id="rotateBtn" class=" bottom" color="success">
+    Rotate
+  </ion-button>
 </ion-content>

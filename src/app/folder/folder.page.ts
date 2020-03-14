@@ -19,6 +19,8 @@ export class FolderPage implements OnInit {
   diceMode: any;
   bottleMode: any;
   mode: any;
+  bottle: any;
+  deg: number = 0;
   public show: boolean = true;
 
   constructor(
@@ -37,6 +39,7 @@ export class FolderPage implements OnInit {
     this.mode = document.querySelector("#mode");
     this.diceMode = document.querySelector("#diceMode");
     this.bottleMode = document.querySelector("#bottleMode");
+    this.bottle = document.querySelector("#bottle");
 
     this.changeMode();
     this.setTransitions();
@@ -50,6 +53,7 @@ export class FolderPage implements OnInit {
     this.renderer.setElementStyle(this.dot4, 'transition', '0.1s linear');
     this.renderer.setElementStyle(this.dot5, 'transition', '0.1s linear');
     this.renderer.setElementStyle(this.dot6, 'transition', '0.1s linear');
+    this.renderer.setElementStyle(this.bottle, 'transition', '5s cubic-bezier(0.05, 0.95, 0.31, 0.95)');
   }
 
   setOne(){
@@ -158,5 +162,12 @@ export class FolderPage implements OnInit {
       this.renderer.setElementStyle(this.diceMode, 'display', 'none');
       this.renderer.setElementStyle(this.bottleMode, 'display', 'block');
     }
+  }
+
+  rotate() {
+    this.deg += Math.random()*360+3600;
+    console.log('Deg:: ',this.deg);
+    this.renderer.setElementStyle(this.bottle, 'transform', 'rotate(0deg)');
+    this.renderer.setElementStyle(this.bottle, 'transform', 'rotate('+this.deg.toString()+'deg)');
   }
 }
