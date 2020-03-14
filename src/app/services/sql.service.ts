@@ -11,6 +11,7 @@ import { Truth } from '../interfaces/truth';
 import { Dare } from '../interfaces/dare';
 import { Question } from '../interfaces/question';
 import { Challenge } from '../interfaces/challenge';
+import { Setting } from '../interfaces/setting';
 
 @Injectable({
   providedIn: 'root'
@@ -271,6 +272,57 @@ export class SqlService {
     return this.database.executeSql('UPDATE challenges SET challenge = ?, dare_id = ? WHERE id=?',[challenge.challenge, challenge.dare_id, challenge.id])
     .then(data => {
       this.loadChallenges();
+    });
+  }
+
+  loadSettings(){
+    return this.database.executeSql('SELECT * FROM settings', [])
+    .then(data => {
+      let setting: Setting[] = [];
+
+      if(data.rows.length > 0){
+          setting.push({
+            id: parseInt(data.rows.item(0).id),
+            num_of_players: data.rows.item(0).num_of_players,
+            truth_list: data.rows.item(0).truth_list,
+            dare_list: data.rows.item(0).dare_list
+          });
+      }
+      this.settings.next(setting);
+    });
+  }
+
+  // addSetting(num_of_players, truth_list, dare_list) {
+  //   let data  = [num_of_players, truth_list, dare_list];
+  //   return this.database.executeSql('INSERT INTO settings (num_of_players, truth_list, dare_list) VALUES (?, ?)', data)
+  //   .then(data => {
+  //     this.loadSettings();
+  //   });
+  // }
+
+  getSetting() {
+    return this.database.executeSql('SELECT * FROM settings WHERE id = 0')
+    .then(data => {
+      return {
+        id: data.rows.item[0].id,
+        num_of_players: data.rows.item(0).num_of_players,
+        truth_list: data.rows.item(0).truth_list,
+        dare_list: data.rows.item(0).dare_list
+      }
+    });
+  }
+
+  // deleteSetting(id) {
+  //   return  this.database.executeSql('DELETE FROM settings WHERE id = ?', [id])
+  //   .then(_ => {
+  //     this.loadSettings();
+  //   });
+  // }
+
+  updateSetting(setting:Setting) {
+    return this.database.executeSql('UPDATE challenges SET num_of_players = ?, truth_list = ?, dare_list = ? WHERE id=1',[setting.num_of_players, setting.truth_list, setting.dare_list])
+    .then(data => {
+      this.loadSettings();
     });
   }
 }
