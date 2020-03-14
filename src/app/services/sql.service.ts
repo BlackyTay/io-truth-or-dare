@@ -10,6 +10,7 @@ import { HttpClient } from '@angular/common/http';
 import { Truth } from '../interfaces/truth';
 import { Dare } from '../interfaces/dare';
 import { Question } from '../interfaces/question';
+import { Challenge } from '../interfaces/challenge';
 
 @Injectable({
   providedIn: 'root'
@@ -219,6 +220,57 @@ export class SqlService {
     return this.database.executeSql('UPDATE questions SET question = ?, truth_id = ? WHERE id=?',[question.question, question.truth_id, question.id])
     .then(data => {
       this.loadQuestions();
+    });
+  }
+
+  loadChallenges(){
+    return this.database.executeSql('SELECT * FROM challenges', [])
+    .then(data => {
+      let challenge: Challenge[] = [];
+
+      if(data.rows.length > 0){
+        for(let i=0; i<data.rows.length; i++ ) {
+          challenge.push({
+            id: parseInt(data.rows.item(i).id),
+            challenge: data.rows.item(i).challenge,
+            dare_id: data.rows.item(i).dare_id
+          });
+        }
+      }
+      this.challenges.next(challenge);
+    });
+  }
+
+  addChallenge(challenges, dare_id) {
+    let data  = [challenges, dare_id];
+    return this.database.executeSql('INSERT INTO challenges (challenges, dare_id) VALUES (?, ?)', data)
+    .then(data => {
+      this.loadChallenges();
+    });
+  }
+
+  getChallenge(id) {
+    return this.database.executeSql('SELECT * FROM challenges WHERE id = ?', [id])
+    .then(data => {
+      return {
+        id: data.rows.item[0].id,
+        challenge: data.rows.item(0).challenge,
+        dare_id: data.rows.item(0).dare_id
+      }
+    });
+  }
+
+  deleteChallenge(id) {
+    return  this.database.executeSql('DELETE FROM challenges WHERE id = ?', [id])
+    .then(_ => {
+      this.loadChallenges();
+    });
+  }
+
+  updateChallenge(challenge:Challenge) {
+    return this.database.executeSql('UPDATE challenges SET challenge = ?, dare_id = ? WHERE id=?',[challenge.challenge, challenge.dare_id, challenge.id])
+    .then(data => {
+      this.loadChallenges();
     });
   }
 }
