@@ -2,6 +2,7 @@ import { Component, OnInit, Renderer } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 import { resolve } from 'url';
+import { AlertController, ToastController, Platform } from '@ionic/angular';
 
 @Component({
   selector: 'app-folder',
@@ -10,6 +11,7 @@ import { resolve } from 'url';
 })
 export class FolderPage implements OnInit {
   public folder: string;
+  subscription: any;
 
   dot1: any;
   dot2: any;
@@ -28,7 +30,9 @@ export class FolderPage implements OnInit {
   constructor(
     private activatedRoute: ActivatedRoute, 
     // private screenOrientation: ScreenOrientation, 
-    private renderer: Renderer) { }
+    private renderer: Renderer,
+    private toastCtrl: ToastController,
+    private platform: Platform) { }
 
   ngOnInit() {
     // this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
@@ -237,4 +241,25 @@ export class FolderPage implements OnInit {
     this.renderer.setElementStyle(this.bottle, 'transform', 'rotate(0deg)');
     this.renderer.setElementStyle(this.bottle, 'transform', 'rotate('+this.deg.toString()+'deg)');
   }
+
+  
+  ionViewDidEnter() {
+    let backpressedCount = 0;
+  this.subscription = this.platform.backButton.subscribe(() => {
+    if(backpressedCount+2000 > new Date().getTime()){
+        this.toastCtrl.dismiss();
+        navigator['app'].exitApp();
+    } else {
+      this.toastCtrl.create(
+        {
+          message: 'Press back again to exit',
+          duration: 2000,
+        }
+      ).then((toast) => 
+      toast.present() )
+    }
+    backpressedCount = new Date().getTime();
+  } 
+  );
+}
 }
