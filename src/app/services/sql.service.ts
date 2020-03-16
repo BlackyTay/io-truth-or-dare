@@ -346,18 +346,18 @@ export class SqlService {
   //   });
   // }
 
-  // updateSetting(setting:Setting) {
-  //   return this.database.executeSql("UPDATE challenges SET num_of_players = ?, truth_list = ?, dare_list = ? WHERE id = ?",[setting.num_of_players, setting.truth_list, setting.dare_list, setting.id])
-  //   .then(data => {
-  //     this.loadSettings();
-  //   });
-  // }
-
   updateSetting(setting:Setting) {
-    this.database.transaction(a => {
-      a.executeSql("UPDATE settings SET num_of_players = ?, truth_list = ?, dare_list = ? WHERE id = ?",[setting.num_of_players, setting.truth_list, setting.dare_list, setting.id]);
-    }).then(data => {
+    return this.database.executeSql("UPDATE settings SET num_of_players = ?, truth_list = ?, dare_list = ? WHERE id = ?",[setting.num_of_players, setting.truth_list, setting.dare_list, setting.id])
+    .then(data => {
       this.loadSettings();
     });
   }
+
+  // updateSetting(setting:Setting) {
+  //   this.database.transaction(a => {
+  //     a.executeSql("UPDATE settings SET num_of_players = ?, truth_list = ?, dare_list = ? WHERE id = ?",[setting.num_of_players, setting.truth_list, setting.dare_list, setting.id]);
+  //   }).then(data => {
+  //     this.loadSettings();
+  //   });
+  // }
 }

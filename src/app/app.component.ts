@@ -3,6 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { Platform, AlertController } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
+import { SqlService } from './services/sql.service';
+import { Setting } from './interfaces/setting';
 
 @Component({
   selector: 'app-root',
@@ -10,13 +12,20 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
   styleUrls: ['app.component.scss']
 })
 export class AppComponent implements OnInit {
-  numOfPlayers: number = 6;
+  // numOfPlayers: number = 6;
+  setting: Setting = {
+    id: 0,
+    num_of_players: 0,
+    truth_list: 0,
+    dare_list: 0
+  };
 
   constructor(
     private platform: Platform,
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
-    private alertCtrl: AlertController
+    private alertCtrl: AlertController,
+    private sql: SqlService
   ) {
     this.initializeApp();
   }
@@ -29,6 +38,21 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.sql.getDBState().subscribe(ready => {
+      if(ready){
+        console.log("DB Ready");
+        this.getSetting();
+      }
+    })
+  }
+
+  getSetting() {
+    this.sql.settings.subscribe(setting => {
+      this.setting.id = setting[0].id;
+      this.setting.num_of_players = setting[0].num_of_players;
+      this.setting.truth_list = setting[0].truth_list;
+      this.setting.dare_list = setting[0].dare_list;
+    });
   }
 
   setPlayers() {
@@ -40,7 +64,7 @@ export class AppComponent implements OnInit {
         {
           name: 'numOfPlayers',
           type: 'number',
-          placeholder: "Default is "+this.numOfPlayers.toString()
+          placeholder: "Default is "+this.setting.num_of_players.toString()
         }
       ],
       buttons:[
@@ -51,10 +75,8 @@ export class AppComponent implements OnInit {
         {
           text: "Confirm",
           handler: (alert) => {
-            console.log(alert.numOfPlayers);
-            console.log(this.numOfPlayers);
-            this.numOfPlayers = alert.numOfPlayers;
-            console.log(this.numOfPlayers);
+            this.setting.num_of_players = alert.numOfPlayers;
+            this.sql.updateSetting(this.setting);
           }
         }
       ]
