@@ -45,7 +45,12 @@ export class SqlService {
       this.sqlitePorter.importSqlToDb(this.database, sql)
       .then(_ => {
         //load
-        this.dbReady.next(true);
+        this.loadTruths().then(() =>
+        this.loadDares()).then(() => 
+        this.loadChallenges()).then(() => 
+        this.loadQuestions()).then(() => 
+        this.loadSettings()).then(()=>
+        this.dbReady.next(true));
       })
       .catch(e => console.error(e));
     });
@@ -88,6 +93,7 @@ export class SqlService {
           });
         }
       }
+      console.log('Load Truths');
       this.truths.next(truth);
     });
   }
@@ -104,8 +110,8 @@ export class SqlService {
     return this.database.executeSql('SELECT * FROM truths WHERE id = ?', [id])
     .then(data => {
       return {
-        id: data.rows.item[0].id,
-        title: data.rows.item[0].title
+        id: data.rows.item(0).id,
+        title: data.rows.item(0).title
       }
     });
   }
@@ -137,6 +143,7 @@ export class SqlService {
           });
         }
       }
+      console.log('Load Dares');
       this.dares.next(dare);
     });
   }
@@ -153,8 +160,8 @@ export class SqlService {
     return this.database.executeSql('SELECT * FROM dares WHERE id = ?', [id])
     .then(data => {
       return {
-        id: data.rows.item[0].id,
-        title: data.rows.item[0].title
+        id: data.rows.item(0).id,
+        title: data.rows.item(0).title
       }
     });
   }
@@ -187,6 +194,7 @@ export class SqlService {
           });
         }
       }
+      console.log('Load Questions');
       this.questions.next(question);
     });
   }
@@ -203,7 +211,7 @@ export class SqlService {
     return this.database.executeSql('SELECT * FROM questions WHERE id = ?', [id])
     .then(data => {
       return {
-        id: data.rows.item[0].id,
+        id: data.rows.item(0).id,
         question: data.rows.item(0).question,
         truth_id: data.rows.item(0).truth_id
       }
@@ -238,6 +246,7 @@ export class SqlService {
           });
         }
       }
+      console.log('Load Challenges');
       this.challenges.next(challenge);
     });
   }
@@ -254,7 +263,7 @@ export class SqlService {
     return this.database.executeSql('SELECT * FROM challenges WHERE id = ?', [id])
     .then(data => {
       return {
-        id: data.rows.item[0].id,
+        id: data.rows.item(0).id,
         challenge: data.rows.item(0).challenge,
         dare_id: data.rows.item(0).dare_id
       }
@@ -288,6 +297,7 @@ export class SqlService {
             dare_list: data.rows.item(0).dare_list
           });
       }
+      console.log('Load Settings');
       this.settings.next(setting);
     });
   }
@@ -301,17 +311,34 @@ export class SqlService {
   // }
 
   getSetting() {
-    return this.database.executeSql('SELECT * FROM settings WHERE id = 0')
+    let returnData = {};
+    return this.database.executeSql('SELECT * FROM settings WHERE id=1')
     .then(data => {
-      return {
-        id: data.rows.item[0].id,
+      return{
+        id: data.rows.item(0).id,
         num_of_players: data.rows.item(0).num_of_players,
         truth_list: data.rows.item(0).truth_list,
         dare_list: data.rows.item(0).dare_list
       }
+    })
+    .catch(e => {
+      console.log("ERR: ", e);
     });
   }
 
+  // getSetting2() {
+  //   let returnData = {};
+  //   return this.database.transaction(db => {
+  //     return db.executeSql('SELECT * FROM settings WHERE id=1',[], ((db,data) => {
+  //       return {
+  //         id: data.rows.item(0).id,
+  //         num_of_players: data.rows.item(0).num_of_players,
+  //         truth_list: data.rows.item(0).truth_list,
+  //         dare_list: data.rows.item(0).dare_list
+  //       }
+  //     }));
+  //   });
+  // }
   // deleteSetting(id) {
   //   return  this.database.executeSql('DELETE FROM settings WHERE id = ?', [id])
   //   .then(_ => {
@@ -319,9 +346,17 @@ export class SqlService {
   //   });
   // }
 
+  // updateSetting(setting:Setting) {
+  //   return this.database.executeSql("UPDATE challenges SET num_of_players = ?, truth_list = ?, dare_list = ? WHERE id = ?",[setting.num_of_players, setting.truth_list, setting.dare_list, setting.id])
+  //   .then(data => {
+  //     this.loadSettings();
+  //   });
+  // }
+
   updateSetting(setting:Setting) {
-    return this.database.executeSql('UPDATE challenges SET num_of_players = ?, truth_list = ?, dare_list = ? WHERE id=1',[setting.num_of_players, setting.truth_list, setting.dare_list])
-    .then(data => {
+    this.database.transaction(a => {
+      a.executeSql("UPDATE settings SET num_of_players = ?, truth_list = ?, dare_list = ? WHERE id = ?",[setting.num_of_players, setting.truth_list, setting.dare_list, setting.id]);
+    }).then(data => {
       this.loadSettings();
     });
   }
