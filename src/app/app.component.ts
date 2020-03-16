@@ -5,6 +5,7 @@ import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { SqlService } from './services/sql.service';
 import { Setting } from './interfaces/setting';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -25,7 +26,8 @@ export class AppComponent implements OnInit {
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
     private alertCtrl: AlertController,
-    private sql: SqlService
+    private sql: SqlService,
+    private router: Router
   ) {
     this.initializeApp();
   }
@@ -88,6 +90,7 @@ export class AppComponent implements OnInit {
 
   selectQList() {
     console.log("SelectQList here");
+    this.router.navigateByUrl('list/select');
   }
 
   editQList() {
