@@ -1,0 +1,55 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Select Q & C List</ion-title>
+    <ion-buttons (click)="save()" slot="end">
+      <ion-button>
+      <ion-icon slot="icon-only" name="save" color="primary"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content id="question_list">
+<ion-item>
+  <ion-label>Question List</ion-label>
+  <ion-select id="truth" value="0" interface="popover" placeholder="Select Questions" (ionChange)="displayQuestion()">
+    <ion-select-option value="0">Random</ion-select-option>
+    <ion-select-option *ngFor="let truth of truthslist" value="{{truth.id}}">{{truth.title}}</ion-select-option>
+  </ion-select>
+</ion-item>
+<ion-list id="questions">
+  <ion-item *ngFor="let question of questionslist">
+    <ion-label>{{ question.question }}</ion-label>
+  </ion-item>
+</ion-list>
+</ion-content>
+
+<ion-content id="challenge_list">
+<ion-item>
+  <ion-label>Challenge List</ion-label>
+  <ion-select id="dare" value="0" interface="popover" placeholder="Select Challenges" (ionChange)="displayChallenge()">
+    <ion-select-option value="0">Random</ion-select-option>
+    <ion-select-option *ngFor="let dare of dareslist" value="{{dare.id}}">{{dare.title}}</ion-select-option>
+  </ion-select>
+</ion-item>
+<ion-list id="challenges">
+  <ion-item *ngFor="let challenge of challengeslist">
+    <ion-label>{{ challenge.challenge }}</ion-label>
+  </ion-item>
+</ion-list>
+</ion-content>
+
+<ion-tabs>
+  <ion-tab-bar slot="bottom">
+    <ion-tab-button (click)="questions()" id="q_btn">
+      <ion-icon name="heart-half"></ion-icon>
+      <ion-label>Question</ion-label>
+    </ion-tab-button>
+    <ion-tab-button (click)="challenges()" id="c_btn">
+      <ion-icon name="flag"></ion-icon>
+      <ion-label>Challenge</ion-label>
+    </ion-tab-button>
+  </ion-tab-bar>
+</ion-tabs>
