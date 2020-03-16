@@ -262,4 +262,8 @@ export class FolderPage implements OnInit {
   } 
   );
 }
+
+  ionViewDidLeave() {
+    this.subscription.unsubscribe();
+  }
 }
